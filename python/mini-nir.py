@@ -7,6 +7,10 @@ import sys
 import ADS1263
 import RPi.GPIO as GPIO
 import numpy as np
+import matplotlib.pyplot as plt
+from PyQt5.QtWidgets import QApplication
+#import animation as animation, cm
+#import pyqtgraph as pg
 
 if len(sys.argv) > 1:
     filename = str(sys.argv[1])
@@ -18,6 +22,7 @@ REF = 5.22          # Modify according to actual voltage
                     # external AVDD and AVSS(Default), or internal 2.5V
 
 NUM_SAMPLES = 1000
+NUM_CHANNELS = 6
 try:
     ADC = ADS1263.ADS1263()
     if (ADC.ADS1263_init_ADC1('ADS1263_7200SPS') == -1):
@@ -29,12 +34,12 @@ try:
     
     # rate test
     time_start = time.time()
-    ADC_Value = np.zeros((NUM_SAMPLES,6))
+    ADC_Value = np.zeros((NUM_SAMPLES, NUM_CHANNELS + 1))
 
 #        isSingleChannel = False
 #        if isSingleChannel:
     for i in range(NUM_SAMPLES):
-        for c in range(6):
+        for c in range(NUM_CHANNELS):
         #ADC_Value.append(ADC.ADS1263_GetAll())
             raw = ADC.ADS1263_GetChannalValue(c)
             if(raw>>31 ==1):
@@ -44,13 +49,27 @@ try:
                 # adcval = REF*2 - raw * REF / 0x7fffffff
                 # print("ADC1 IN%d = %lf" %(i, (ADC_Value[i] * REF / 0x7fffffff)))   # 32bit
                 adcval = raw * REF / 0x7fffffff   # 32bit
-            ADC_Value[i, c] = adcval
+            ADC_Value[i, c + 1] = adcval
+
+        ADC_Value[i, 0] = time.time() - time_start
 
     time_end = time.time()
     print(time_start, time_end)
     print(time_end - time_start)
     print('frequency = ', NUM_SAMPLES / (time_end - time_start))
-        
+
+    fig = plt.figure()
+    plt.ion()
+    plt.style.use('fivethirtyeight')
+    plt.plot(ADC_Value,linewidth=0.2)
+    fig.suptitle('test', fontsize=20)
+    plt.xlabel('time', fontsize=12)
+    plt.ylabel('Volt', fontsize=12)
+    plt.pause(10)
+   # plt.show()
+   
+
+
     ADC.ADS1263_Exit()
 # colocar aqui funcao para guardar ADC_Value em fich  .csv    
     np.savetxt(filename, ADC_Value, fmt='%.5f', delimiter=',')
