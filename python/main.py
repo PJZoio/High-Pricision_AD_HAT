@@ -6,21 +6,17 @@ import time
 import ADS1263
 import RPi.GPIO as GPIO
 
-REF = 5.22          # Modify according to actual voltage
+REF = 5.08          # Modify according to actual voltage
                     # external AVDD and AVSS(Default), or internal 2.5V
 
 # ADC1 test part
-TEST_ADC1       = False
+TEST_ADC1       = True
 # ADC2 test part
 TEST_ADC2       = False
 # ADC1 rate test part, For faster speeds use the C program
-TEST_ADC1_RATE   = True
+TEST_ADC1_RATE   = False
 # RTD test part 
-TEST_RTD        = False
-NUM_SAMPLES = 1000
-
-
-datafile = open("test.csv",'w')
+TEST_RTD        = False     
 
 try:
     ADC = ADS1263.ADS1263()
@@ -56,24 +52,24 @@ try:
     elif(TEST_ADC1_RATE):    # rate test
         time_start = time.time()
         ADC_Value = []
-        isSingleChannel = False
+        isSingleChannel = True
         if isSingleChannel:
             while(1):
                 ADC_Value.append(ADC.ADS1263_GetChannalValue(0))
-                if len(ADC_Value) == NUM_SAMPLES:
+                if len(ADC_Value) == 10000:
                     time_end = time.time()
                     print(time_start, time_end)
                     print(time_end - time_start)
-                    print('frequency = ', NUM_SAMPLES / (time_end - time_start))
+                    print('frequency = ', 10000 / (time_end - time_start))
                     break
         else:
             while(1):
                 ADC_Value.append(ADC.ADS1263_GetAll())
-                if len(ADC_Value) == NUM_SAMPLES:
+                if len(ADC_Value) == 1000:
                     time_end = time.time()
                     print(time_start, time_end)
                     print(time_end - time_start)
-                    print('frequency = ', NUM_SAMPLES / (time_end - time_start))
+                    print('frequency = ', 10000 / (time_end - time_start))
                     break
 
     elif(TEST_RTD):     # RTD Test
@@ -84,7 +80,6 @@ try:
             TEMP = (RES/100.0 - 1.0) / 0.00385      #0.00385 -- pt100
             print("TEMP is %lf"%TEMP)
             print("\33[3A")
-            datafile.write(RES)
         
     ADC.ADS1263_Exit()
 
