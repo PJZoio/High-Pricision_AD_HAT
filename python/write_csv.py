@@ -11,13 +11,14 @@ import numpy as np
 if len(sys.argv) > 1:
     filename = str(sys.argv[1])
 else:
-    filename = 'dados.csv'
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    filename = 'dados/BIODBR_' + timestr + '.csv'
 
 
 REF = 5.22          # Modify according to actual voltage
                     # external AVDD and AVSS(Default), or internal 2.5V
 
-NUM_SAMPLES = 1000
+NUM_SAMPLES = 6000
 NUM_CHANNELS = 6
 
 
