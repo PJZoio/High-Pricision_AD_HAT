@@ -28,7 +28,7 @@ mydb = MySQLdb.connect(host='epics.ipfn.tecnico.ulisboa.pt',
 cursor = mydb.cursor(MySQLdb.cursors.DictCursor)
 
 stmt = "SELECT * FROM tabelaEnsaios WHERE Ensaio = %s"
-record = (20,)
+record = (ensaio,)
 cursor.execute(stmt, record)
 data = cursor.fetchone()
 
