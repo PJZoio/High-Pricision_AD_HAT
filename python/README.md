@@ -10,15 +10,16 @@ File      	:   Readme_EN.txt
 # This file is to help you use this ADC HAT.
 
 1. Basic information:  
-	This routine is based on the raspberry PI 4B+ development, the kernel version:
-	Linux raspberrypi 5.4.51-v7l+ #1333 SMP Mon Aug 10 16:51:40 BST 2020 armv7l GNU/Linux
+	This routine is based on the raspberry PI 4B+ development, the kernel version:  
+	Linux raspberrypi 5.4.51-v7l+ #1333 SMP Mon Aug 10 16:51:40 BST 2020 armv7l GNU/Linux  
 	You can view the detailed test routine in the project's main.py
 
 2. Pin connection:  
-Pin connections can be viewed in config.py, which is repeated here:
+Pin connections can be viewed in config.py, which is repeated here:  
 	*. SPI:
+
 	| HAT pin|Rpi |
-	|---|___|
+	|---|---|
 	|AD HAT |    RPI(BCM) |
 	|VCC   |    Without direct connection,<br/>other devices can be directly connected to 3.3V|
 	|GND   |   GND|
