@@ -21,22 +21,17 @@ REF = 5.22          # Modify according to actual voltage
 NUM_SAMPLES = 6000
 NUM_CHANNELS = 6
 
-
 try:
     ADC = ADS1263.ADS1263()
     if (ADC.ADS1263_init_ADC1('ADS1263_7200SPS') == -1):
         exit()
     ADC.ADS1263_SetMode(0)
 
-    # rate test
     time_start = time.time()
     ADC_Value = np.zeros((NUM_SAMPLES, NUM_CHANNELS + 1))
 
-#        isSingleChannel = False
-#        if isSingleChannel:
     for i in range(NUM_SAMPLES):
         for c in range(NUM_CHANNELS):
-        #ADC_Value.append(ADC.ADS1263_GetAll())
             raw = ADC.ADS1263_GetChannalValue(c)
             if(raw>>31 ==1):
                 adcval = REF*2 - raw * REF / 0x80000000
@@ -50,13 +45,11 @@ try:
         ADC_Value[i, 0] = time.time() - time_start
 
     time_end = time.time()
-    # ADC.ADS1263_DAC_Test(1, 1)      # Open IN6
-    # ADC.ADS1263_DAC_Test(0, 1)      # Open IN7
-    
         
     ADC.ADS1263_Exit()
 
-# colocar aqui funcao para guardar ADC_Value em fich  .csv    
+    print('frequency = ', NUM_SAMPLES / (time_end - time_start))
+    print ('Acquisition Done. Saving Data to ', filename)
     np.savetxt(filename, ADC_Value, fmt='%.5f', delimiter=',')
 
 except IOError as e:

@@ -5,20 +5,20 @@
 import time
 import sys
 import ADS1263
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import numpy as np
 import MySQLdb
 
 if len(sys.argv) > 1:
-    filename = str(sys.argv[1])
+    desc = str(sys.argv[1])
+else:
+    desc = 'Descricao'
+
+if len(sys.argv) > 2:
+    filename = str(sys.argv[2])
 else:
     timestr = time.strftime("%Y%m%d-%H%M%S")
     filename = 'dados/BIODBR_' + timestr + '.csv'
-
-if len(sys.argv) > 2:
-    desc = str(sys.argv[2])
-else:
-    desc = 'Descricao'
 
 
 REF = 5.22          # Modify according to actual voltage
@@ -37,8 +37,6 @@ try:
     time_start = time.time()
     ADC_Value = np.zeros((NUM_SAMPLES, NUM_CHANNELS + 1))
 
-#        isSingleChannel = False
-#        if isSingleChannel:
     for i in range(NUM_SAMPLES):
         for c in range(NUM_CHANNELS):
         #ADC_Value.append(ADC.ADS1263_GetAll())
@@ -61,7 +59,8 @@ try:
         
     ADC.ADS1263_Exit()
 
-    print ('Acquisition Done. Saving Data')
+    print('frequency = ', NUM_SAMPLES / (time_end - time_start))
+    print ('Acquisition Done. Saving Data to ', filename)
 
 # colocar aqui funcao para guardar ADC_Value em SQL
     a = np.average(ADC_Value, axis=0)
@@ -88,6 +87,7 @@ try:
         cursor.execute(sql, record)
    # Commit your changes in the database
         mydb.commit()
+        print ('Data Stored in DB')
     except:
    # Rolling back in case of error
         print('Data not stored....')

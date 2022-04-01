@@ -10,11 +10,11 @@ REF = 5.08          # Modify according to actual voltage
                     # external AVDD and AVSS(Default), or internal 2.5V
 
 # ADC1 test part
-TEST_ADC1       = True
+TEST_ADC1       = False
 # ADC2 test part
 TEST_ADC2       = False
 # ADC1 rate test part, For faster speeds use the C program
-TEST_ADC1_RATE   = False
+TEST_ADC1_RATE   = True
 # RTD test part 
 TEST_RTD        = False     
 
@@ -52,7 +52,7 @@ try:
     elif(TEST_ADC1_RATE):    # rate test
         time_start = time.time()
         ADC_Value = []
-        isSingleChannel = True
+        isSingleChannel = False
         if isSingleChannel:
             while(1):
                 ADC_Value.append(ADC.ADS1263_GetChannalValue(0))
